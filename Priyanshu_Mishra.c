@@ -65,10 +65,12 @@ static int read_int(const char *prompt, int *out) {
         fflush(stdout);
     }
     get_line(line, sizeof(line));
-    if (line[0] == '\0') return 0;
+    if (line[0] == '\0') 
+    return 0;
     char *endptr;
     long val = strtol(line, &endptr, 10);
-    if (endptr == line || *endptr != '\0') return 0;
+    if (endptr == line || *endptr != '\0') 
+    return 0;
     *out = (int)val;
     return 1;
 }
@@ -102,13 +104,15 @@ void list_wards() {
 
 Ward* find_ward_by_id(int ward_id) {
     for (int i = 0; i < ward_count; ++i) {
-        if (wards[i].ward_id == ward_id) return &wards[i];
+        if (wards[i].ward_id == ward_id)
+         return &wards[i];
     }
     return NULL;
 }
 
 int allocate_bed_to_patient(Patient *p) {
-    if (!p) return 0;
+    if (!p) 
+    return 0;
     int best_index = -1;
     int best_vacant = 0;
     for (int i = 0; i < ward_count; ++i) {
@@ -120,7 +124,8 @@ int allocate_bed_to_patient(Patient *p) {
             }
         }
     }
-    if (best_index == -1) return 0;
+    if (best_index == -1) 
+    return 0;
     wards[best_index].occupied++;
     p->ward_assigned = wards[best_index].ward_id;
     return 1;
@@ -167,7 +172,8 @@ void remove_from_waitlist_by_index(int idx) {
 }
 
 void try_allocate_waiting() {
-    if (waiting_count == 0) return;
+    if (waiting_count == 0)
+    return;
     int i = 0;
     while (i < waiting_count) {
         Patient *p = waiting_list[i];
@@ -188,10 +194,16 @@ void admit_patient_interactive() {
 
     printf("Enter patient name: ");
     get_line(name, sizeof(name));
-    if (name[0] == '\0') { printf("Name cannot be empty.\n"); return; }
+    if (name[0] == '\0') { printf("Name cannot be empty.\n"); 
+        return; 
+    }
 
-    if (!read_int("Enter age: ", &age)) { printf("Invalid age.\n"); return; }
-    if (!read_int("Enter severity (1-10; 10 most severe): ", &severity)) { printf("Invalid severity.\n"); return; }
+    if (!read_int("Enter age: ", &age)) { printf("Invalid age.\n"); 
+        return; 
+    }
+    if (!read_int("Enter severity (1-10; 10 most severe): ", &severity)) { printf("Invalid severity.\n");
+        return; 
+    }
     if (severity < 1) severity = 1;
     if (severity > 10) severity = 10;
 
@@ -208,15 +220,23 @@ void admit_patient_interactive() {
 }
 
 void discharge_patient_interactive() {
-    if (patient_count == 0) { printf("No patients in system.\n"); return; }
+    if (patient_count == 0) { printf("No patients in system.\n"); 
+        return; 
+    }
     int id;
-    if (!read_int("Enter patient ID to discharge: ", &id)) { printf("Invalid ID.\n"); return; }
+    if (!read_int("Enter patient ID to discharge: ", &id)) { printf("Invalid ID.\n"); 
+        return; 
+    }
 
     int idx = -1;
     for (int i = 0; i < patient_count; ++i) {
-        if (patients[i]->patient_id == id) { idx = i; break; }
+        if (patients[i]->patient_id == id) { idx = i; 
+            break;
+        }
     }
-    if (idx == -1) { printf("Patient ID %d not found.\n", id); return; }
+    if (idx == -1) { printf("Patient ID %d not found.\n", id);
+        return; 
+    }
 
     Patient *p = patients[idx];
 
@@ -227,7 +247,9 @@ void discharge_patient_interactive() {
     } else {
         int widx = -1;
         for (int j = 0; j < waiting_count; ++j) {
-            if (waiting_list[j] == p) { widx = j; break; }
+            if (waiting_list[j] == p) { widx = j; 
+                break; 
+            }
         }
         if (widx != -1) {
             remove_from_waitlist_by_index(widx);
@@ -251,13 +273,18 @@ void discharge_patient_interactive() {
 }
 
 void list_patients() {
-    if (patient_count == 0) { printf("No patients in system.\n"); return; }
+    if (patient_count == 0) { 
+    printf("No patients in system.\n");
+    return; 
+}
     printf("Patients:\n");
     printf("ID\tName\t\tAge\tSeverity\tWardAssigned\n");
     for (int i = 0; i < patient_count; ++i) {
         Patient *p = patients[i];
         printf("%d\t%-12s\t%d\t%d\t\t", p->patient_id, p->name, p->age, p->severity);
-        if (p->ward_assigned == -1) printf("Waiting\n"); else printf("%d\n", p->ward_assigned);
+        if (p->ward_assigned == -1) printf("Waiting\n"); 
+        else
+        printf("%d\n", p->ward_assigned);
     }
     if (waiting_count > 0) {
         printf("\nWaiting list (by severity desc):\n");
@@ -269,7 +296,10 @@ void list_patients() {
 }
 
 void reports() {
-    if (ward_count == 0) { printf("No wards defined.\n"); return; }
+    if (ward_count == 0) { 
+        printf("No wards defined.\n");
+        return;
+    }
     int total_capacity = 0, total_occupied = 0;
     for (int i = 0; i < ward_count; ++i) {
         total_capacity += wards[i].capacity;
@@ -283,12 +313,17 @@ void reports() {
 
 void free_all() {
     if (patients) {
-        for (int i = 0; i < patient_count; ++i) free(patients[i]);
+        for (int i = 0; i < patient_count; ++i) 
+        free(patients[i]);
         free(patients);
         patients = NULL;
     }
-    if (waiting_list) { free(waiting_list); waiting_list = NULL; }
-    if (wards) { free(wards); wards = NULL; }
+    if (waiting_list) {
+        free(waiting_list); waiting_list = NULL;
+     }
+    if (wards) {
+        free(wards); wards = NULL;
+     }
     ward_count = patient_count = waiting_count = 0;
 }
 
@@ -309,30 +344,46 @@ int main(void) {
         printf("Choose option: ");
         char choice_line[LINE_LEN];
         get_line(choice_line, sizeof(choice_line));
-        if (choice_line[0] == '\0') continue;
+        if (choice_line[0] == '\0')
+        continue;
         int choice = atoi(choice_line);
 
         switch (choice) {
-            case 1: list_wards(); break;
+            case 1: list_wards(); 
+            break;
             case 2: {
                 int wid = 0, cap = 0;
                 char dept[DEPT_LEN];
-                if (!read_int("Enter new ward id: ", &wid)) { printf("Invalid ward id.\n"); break; }
+                if (!read_int("Enter new ward id: ", &wid)) { printf("Invalid ward id.\n");
+                    break;
+                }
                 printf("Enter department name (no spaces): ");
                 get_line(dept, sizeof(dept));
-                if (dept[0] == '\0') { printf("Invalid department.\n"); break; }
-                if (!read_int("Enter capacity: ", &cap)) { printf("Invalid capacity.\n"); break; }
-                if (cap <= 0) { printf("Capacity must be positive.\n"); break; }
+                if (dept[0] == '\0') { printf("Invalid department.\n");
+                    break;
+                }
+                if (!read_int("Enter capacity: ", &cap)) { printf("Invalid capacity.\n");
+                    break; 
+                }
+                if (cap <= 0) { printf("Capacity must be positive.\n");
+                    break; 
+                }
                 add_ward(wid, dept, cap);
                 printf("Ward added.\n");
                 break;
             }
-            case 3: admit_patient_interactive(); break;
-            case 4: discharge_patient_interactive(); break;
-            case 5: list_patients(); break;
-            case 6: reports(); break;
-            case 7: free_all(); printf("Exiting.\n"); return 0;
-            default: printf("Invalid choice.\n");
+            case 3: admit_patient_interactive();
+            break;
+            case 4: discharge_patient_interactive();
+            break;
+            case 5: list_patients();
+            break;
+            case 6: reports();
+            break;
+            case 7: free_all(); printf("Exiting.\n");
+            return 0;
+            default:
+         printf("Invalid choice.\n");
         }
     }
 
