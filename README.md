@@ -18,7 +18,7 @@ CO5: Build a modular hospital allocation system.
 Syllabus Topics Applied: Problem Solving, Arrays, Loops, Functions, Structures, Pointers, Dynamic Memory. 
 
 **Submitted by:-
-Antrang Srivastava
-Priyanshu Mishra
-Mansi Bajpai
-Ashutosh Singh
+Antrang Srivastava,
+Priyanshu Mishra,
+Mansi Bajpai,
+Ashutosh Singh,
